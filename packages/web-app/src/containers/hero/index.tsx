@@ -13,8 +13,8 @@ function Hero() {
       <GridLayout>
         <Wrapper>
           <ContentWrapper>
-            <Title>{t('explore.hero.title')}</Title>
-            <Subtitle>{t('explore.hero.subtitle1')}</Subtitle>
+            <Title>Regional DAO Protocol</Title>
+            <Subtitle>Put your local community on turbo</Subtitle>
           </ContentWrapper>
           <ImageWrapper>
             <StyledImage src={Logo} />

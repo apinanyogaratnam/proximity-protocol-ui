@@ -13,24 +13,24 @@ const CTACards = [
     path: CreateDAO,
     imgSrc: createDaoImg,
     subtitle: i18n.t('cta.create.description'),
-    title: i18n.t('cta.create.title'),
+    title: "Start or join your local DAO",
   },
-  {
-    actionAvailable: true,
-    actionLabel: i18n.t('cta.learn.actionLabel'),
-    path: 'https://aragon.org/education-portal',
-    imgSrc: learnImg,
-    subtitle: i18n.t('cta.learn.description'),
-    title: i18n.t('cta.learn.title'),
-  },
-  {
-    actionAvailable: false,
-    actionLabel: i18n.t('cta.build.actionLabel'),
-    path: '',
-    imgSrc: buildFaster,
-    subtitle: i18n.t('cta.build.description'),
-    title: i18n.t('cta.build.title'),
-  },
+  // {
+  //   actionAvailable: true,
+  //   actionLabel: i18n.t('cta.learn.actionLabel'),
+  //   path: 'https://aragon.org/education-portal',
+  //   imgSrc: learnImg,
+  //   subtitle: i18n.t('cta.learn.description'),
+  //   title: i18n.t('cta.learn.title'),
+  // },
+  // {
+  //   actionAvailable: false,
+  //   actionLabel: i18n.t('cta.build.actionLabel'),
+  //   path: '',
+  //   imgSrc: buildFaster,
+  //   subtitle: i18n.t('cta.build.description'),
+  //   title: i18n.t('cta.build.title'),
+  // },
 ];
 
 export {CTACards};
