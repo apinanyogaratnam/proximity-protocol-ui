@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { ButtonText } from '@aragon/ui-components';
 import useScreen from 'hooks/useScreen';
-import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 type Props = {
@@ -21,29 +20,21 @@ const CTACard: React.FC<Props> = (props) => {
   const [value, setValue] = React.useState('');
   const [selectedLocation, setSelectedLocation] = React.useState('');
 
-  React.useEffect(() => {
-    mapboxgl.accessToken = 'pk.eyJ1Ijoiam9lY2hhcmxlc3dvcnRoIiwiYSI6ImNsZm80eTF6ZTA5YTkzdm4zMmJqajdleHUifQ.vJkW5USvnO-966au58wlQQ';
-    const map = new mapboxgl.Map({
-      container: 'map',
-      style: 'mapbox://styles/mapbox/streets-v11',
-      center: [-96, 37.8],
-      zoom: 3,
-    });
-
-    const geocoder = new MapboxGeocoder({
-      accessToken: mapboxgl.accessToken,
-      mapboxgl: mapboxgl,
+  const geocoder = React.useMemo(() => {
+    return new MapboxGeocoder({
+      accessToken: 'pk.eyJ1Ijoiam9lY2hhcmxlc3dvcnRoIiwiYSI6ImNsZm80eTF6ZTA5YTkzdm4zMmJqajdleHUifQ.vJkW5USvnO-966au58wlQQ',
       placeholder: 'Enter a location',
     });
+  }, []);
 
-    map.addControl(geocoder);
-
+  React.useEffect(() => {
     geocoder.on('result', (e) => {
       setSelectedLocation(e.result.place_name);
     });
 
-    return () => map.remove();
-  }, []);
+    const inputContainer = document.getElementById('geocoder-input-container');
+    inputContainer.appendChild(geocoder.onAdd());
+  }, [geocoder]);
 
   const { isDesktop } = useScreen();
 
@@ -55,7 +46,7 @@ const CTACard: React.FC<Props> = (props) => {
         <Subtitle>{props.subtitle}</Subtitle>
       </Content>
 
-      <div id="map" style={{ height: '300px' }} />
+      <div id="geocoder-input-container" />
 
       <ButtonText
         size="large"
