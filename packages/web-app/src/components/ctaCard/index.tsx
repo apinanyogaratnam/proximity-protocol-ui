@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import {ButtonText} from '@aragon/ui-components';
+import { ButtonText } from '@aragon/ui-components';
 import useScreen from 'hooks/useScreen';
+import mapboxgl from 'mapbox-gl';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 
 type Props = {
   // temporary property, to be removed once all actions available
@@ -15,8 +17,35 @@ type Props = {
   title: string;
 };
 
-const CTACard: React.FC<Props> = props => {
-  const {isDesktop} = useScreen();
+const CTACard: React.FC<Props> = (props) => {
+  const [value, setValue] = React.useState('');
+  const [selectedLocation, setSelectedLocation] = React.useState('');
+
+  React.useEffect(() => {
+    mapboxgl.accessToken = 'pk.eyJ1Ijoiam9lY2hhcmxlc3dvcnRoIiwiYSI6ImNsZm80eTF6ZTA5YTkzdm4zMmJqajdleHUifQ.vJkW5USvnO-966au58wlQQ';
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [-96, 37.8],
+      zoom: 3,
+    });
+
+    const geocoder = new MapboxGeocoder({
+      accessToken: mapboxgl.accessToken,
+      mapboxgl: mapboxgl,
+      placeholder: 'Enter a location',
+    });
+
+    map.addControl(geocoder);
+
+    geocoder.on('result', (e) => {
+      setSelectedLocation(e.result.place_name);
+    });
+
+    return () => map.remove();
+  }, []);
+
+  const { isDesktop } = useScreen();
 
   return (
     <CTACardWrapper className={props.className}>
@@ -26,13 +55,15 @@ const CTACard: React.FC<Props> = props => {
         <Subtitle>{props.subtitle}</Subtitle>
       </Content>
 
+      <div id="map" style={{ height: '300px' }} />
+
       <ButtonText
         size="large"
         label={props.actionLabel}
         {...(props.actionAvailable
-          ? {mode: 'primary'}
-          : {mode: 'ghost', disabled: true})}
-        onClick={() => props.onClick(props.path)}
+          ? { mode: 'primary' }
+          : { mode: 'ghost', disabled: true })}
+        onClick={() => props.onClick(selectedLocation)}
         className={`${!isDesktop && 'w-full'}`}
       />
     </CTACardWrapper>
