@@ -64,6 +64,7 @@ const Carousel: React.FC = () => {
   if (isDesktop) {
     return <DesktopCTA>{ctaList}</DesktopCTA>;
   } else {
+    return <DesktopCTA>{ctaList}</DesktopCTA>;
     return (
       <MobileCTA>
         <StyledCarousel
