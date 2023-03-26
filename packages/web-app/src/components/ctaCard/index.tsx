@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { ButtonText } from '@aragon/ui-components';
 import useScreen from 'hooks/useScreen';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+import secrets from '../../../../../secret.json';
 
 type Props = {
   // temporary property, to be removed once all actions available
@@ -22,7 +23,7 @@ const CTACard: React.FC<Props> = (props) => {
 
   const geocoder = React.useMemo(() => {
     return new MapboxGeocoder({
-      accessToken: 'pk.eyJ1Ijoiam9lY2hhcmxlc3dvcnRoIiwiYSI6ImNsZm80eTF6ZTA5YTkzdm4zMmJqajdleHUifQ.vJkW5USvnO-966au58wlQQ',
+      accessToken: secrets.MAPBOX_API_KEY,
       placeholder: 'Enter a location',
     });
   }, []);
