@@ -1,6 +1,8 @@
 VERSION := 1.4
 
 build:
+	rm -rf packages/web-app/dist
+	rm -rf packages/ui-components/dist
 	cd packages/ui-components && npm run build
 	cd packages/web-app && npm run build
 	docker build -t dao-app --platform linux/amd64 .
