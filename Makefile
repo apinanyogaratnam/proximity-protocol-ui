@@ -1,6 +1,8 @@
-VERSION := 1.3
+VERSION := 1.4
 
 build:
+	cd packages/ui-components && npm run build
+	cd packages/web-app && npm run build
 	docker build -t dao-app --platform linux/amd64 .
 	docker tag dao-app apinanyogaratnam/dao-app:${VERSION}
 	docker push apinanyogaratnam/dao-app:${VERSION}
