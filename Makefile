@@ -6,7 +6,6 @@ build:
 	docker push apinanyogaratnam/dao-app:${VERSION}
 
 run:
-	docker stop apinanyogaratnam/dao-app:${VERSION - 0.1}
-	docker rm dao-app
+	docker stop docker stop $(docker ps -aq)
 	docker pull apinanyogaratnam/dao-app:${VERSION}
 	docker run -p 9080:9080 -d apinanyogaratnam/dao-app:${VERSION}
