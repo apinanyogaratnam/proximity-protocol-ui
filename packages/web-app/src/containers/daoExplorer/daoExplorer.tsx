@@ -149,7 +149,7 @@ export const DaoExplorer = () => {
             <div
               key={index}
               style={{
-                width: 'calc(50% - 10px)',
+                width: 'calc(50% - 20px)',
                 height: '300px',
                 backgroundImage: `url(${dao.url})`,
                 backgroundSize: 'cover',
