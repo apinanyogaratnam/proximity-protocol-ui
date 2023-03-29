@@ -1,9 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ButtonText } from '@aragon/ui-components';
+import {ButtonText} from '@aragon/ui-components';
 import useScreen from 'hooks/useScreen';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import secrets from '../../../../../secret.json';
+import {useAuth0} from '@auth0/auth0-react';
 
 type Props = {
   // temporary property, to be removed once all actions available
@@ -17,7 +18,7 @@ type Props = {
   title: string;
 };
 
-const CTACard: React.FC<Props> = (props) => {
+const CTACard: React.FC<Props> = props => {
   const [value, setValue] = React.useState('');
   const [selectedLocation, setSelectedLocation] = React.useState('');
 
@@ -29,7 +30,7 @@ const CTACard: React.FC<Props> = (props) => {
   }, []);
 
   React.useEffect(() => {
-    geocoder.on('result', (e) => {
+    geocoder.on('result', e => {
       setSelectedLocation(e.result.place_name);
     });
 
@@ -37,19 +38,26 @@ const CTACard: React.FC<Props> = (props) => {
     inputContainer.appendChild(geocoder.onAdd());
   }, [geocoder]);
 
-  const { isDesktop } = useScreen();
+  const {isDesktop} = useScreen();
+  const {loginWithRedirect, isAuthenticated, user, logout} = useAuth0();
+  const [mintPageVisible, setMintPageVisible] = React.useState(false);
+  const [isTOSChecked, setIsTOSChecked] = React.useState(false);
+  console.log('isAuthenticated', isAuthenticated);
+  console.log('user', user);
 
   return (
     <CTACardWrapper className={props.className}>
-      <Content>
-        <StyledImg src={props.imgSrc} />
-        <Title>{props.title}</Title>
-        <Subtitle>{props.subtitle}</Subtitle>
-      </Content>
+      {!mintPageVisible && !isAuthenticated ? (
+        <>
+          <Content>
+            <StyledImg src={props.imgSrc} />
+            <Title>{props.title}</Title>
+            <Subtitle>{props.subtitle}</Subtitle>
+          </Content>
 
-      <div id="geocoder-input-container" />
+          <div id="geocoder-input-container" />
 
-      <ButtonText
+          {/* <ButtonText
         size="large"
         label={props.actionLabel}
         {...(props.actionAvailable
@@ -57,7 +65,66 @@ const CTACard: React.FC<Props> = (props) => {
           : { mode: 'ghost', disabled: true })}
         onClick={() => props.onClick(selectedLocation)}
         className={`${!isDesktop && 'w-full'}`}
-      />
+      /> */}
+          <ButtonText
+            size="large"
+            label="Let's Go"
+            onClick={() => {
+              if (!selectedLocation) {
+                alert('Please enter a location');
+                return;
+              } else {
+                setMintPageVisible(true);
+              }
+            }}
+          />
+        </>
+      ) : (
+        <>
+          <Content>
+            <Title>Verify you are human</Title>
+            <Subtitle>
+              We are using Auth0 and twilio to verify you are human.
+            </Subtitle>
+          </Content>
+
+          {isAuthenticated ? (
+            <ButtonText
+              size="large"
+              label="Logout"
+              onClick={() =>
+                logout({logoutParams: {returnTo: window.location.origin}})
+              }
+            />
+          ) : (
+            <ButtonText
+              size="large"
+              label="Login"
+              onClick={() => loginWithRedirect()}
+            />
+          )}
+
+          <>
+            <input
+              type="checkbox"
+              id="terms"
+              name="terms"
+              value="terms"
+              className="mr-2"
+              checked={isTOSChecked}
+              onChange={() => setIsTOSChecked(!isTOSChecked)}
+            />
+            <label
+              htmlFor="terms"
+              className="text-ui-600 ft-text-base"
+              style={{color: 'blue', textDecoration: 'underline'}}
+            >
+              I have read and accept the{' '}
+              <a href="#">Aragon DAO Participation Agreement.</a>
+            </label>
+          </>
+        </>
+      )}
     </CTACardWrapper>
   );
 };

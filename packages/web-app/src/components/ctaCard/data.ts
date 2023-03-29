@@ -12,8 +12,8 @@ const CTACards = [
     actionLabel: i18n.t('cta.create.actionLabel'),
     path: CreateDAO,
     imgSrc: createDaoImg,
-    subtitle: i18n.t('cta.create.description'),
-    title: "Start or join your local DAO",
+    subtitle: 'hi',
+    title: 'Start or join your local DAO',
   },
   // {
   //   actionAvailable: true,
