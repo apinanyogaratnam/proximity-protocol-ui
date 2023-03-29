@@ -42,7 +42,7 @@ const Footer: React.FC = () => {
                 <FlexDiv>
                   <StyledNavList>{PrivacyNavLinks}</StyledNavList>
                   <Copyright>
-                    &copy;{`  ${new Date().getFullYear()}  `}Aragon
+                    &copy;{`  ${new Date().getFullYear()}  `}Proximity
                   </Copyright>
                 </FlexDiv>
               </>
@@ -52,7 +52,7 @@ const Footer: React.FC = () => {
                 <StyledNavList>{ExploreNavLinks}</StyledNavList>
                 <StyledNavList>{PrivacyNavLinks}</StyledNavList>
                 <Copyright>
-                  &copy;{`  ${new Date().getFullYear()}  `}Aragon
+                  &copy;{`  ${new Date().getFullYear()}  `}Proximity
                 </Copyright>
               </>
             )}

@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
         }`}
       >
         <IconInfo />
-        <span>Aragon App Public Beta</span>
+        <span>Proximity Protocol</span>
       </div>
     </Section>
   );
