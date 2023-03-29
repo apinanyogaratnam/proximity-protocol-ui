@@ -93,11 +93,32 @@ export const DaoExplorer = () => {
     return;
   };
 
+  // const initialDaos = [
+  //   'https://source.unsplash.com/1600x900/?global',
+  //   'https://source.unsplash.com/1600x900/?toronto',
+  //   'https://source.unsplash.com/1600x900/?vancouver',
+  // ];
+
+  const initialDaos = [
+    {
+      name: 'Global',
+      url: 'https://source.unsplash.com/1600x900/?global',
+    },
+    {
+      name: 'Toronto',
+      url: 'https://source.unsplash.com/1600x900/?toronto',
+    },
+    {
+      name: 'Vancouver',
+      url: 'https://source.unsplash.com/1600x900/?vancouver',
+    },
+  ];
+
   return (
     <Container>
       <MainContainer>
         <HeaderWrapper>
-          <Title>{t('explore.explorer.title')}</Title>
+          <Title>Explore DAOs</Title>
           {loggedInAndHasFavoritedDaos && (
             <ButtonGroupContainer>
               <ButtonGroup
@@ -113,6 +134,58 @@ export const DaoExplorer = () => {
             </ButtonGroupContainer>
           )}
         </HeaderWrapper>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            // width: '100%',
+            padding: '20px',
+            flexWrap: 'wrap',
+          }}
+        >
+          {initialDaos.map((dao, index) => (
+            <div
+              key={index}
+              style={{
+                width: 'calc(50% - 10px)',
+                height: '300px',
+                backgroundImage: `url(${dao.url})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                borderRadius: '10px',
+                marginRight: '10px',
+                marginBottom: '20px',
+                cursor: 'pointer',
+                marginLeft: index % 2 === 0 ? '0' : '20px',
+              }}
+            >
+              <div
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <div
+                  style={{
+                    color: 'white',
+                    fontSize: '20px',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {dao.name}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
         <CardsWrapper>
           {filterWasChanged && isLoading ? (
             <Spinner size="default" />

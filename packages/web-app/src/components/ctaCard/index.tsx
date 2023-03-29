@@ -116,7 +116,10 @@ const CTACard: React.FC<Props> = props => {
                 onChange={() => setIsTOSChecked(!isTOSChecked)}
               />
               I have read and accept the{' '}
-              <a href="#" style={{color: 'blue', textDecoration: 'underline'}}>
+              <a
+                href="https://aragon.org/terms-and-conditions"
+                style={{color: 'blue', textDecoration: 'underline'}}
+              >
                 Aragon DAO Participation Agreement.
               </a>
             </label>
@@ -124,12 +127,14 @@ const CTACard: React.FC<Props> = props => {
           <ButtonText
             size="large"
             label="Mint NFT"
+            disabled={!isTOSChecked || !isAuthenticated}
             onClick={() => {
               if (!isTOSChecked) {
                 alert('Please accept the terms and conditions');
                 return;
               } else {
-                props.onClick(selectedLocation);
+                // props.onClick(selectedLocation);
+                alert('Minting NFT coming soon!');
               }
             }}
           />
