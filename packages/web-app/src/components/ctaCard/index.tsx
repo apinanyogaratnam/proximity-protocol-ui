@@ -105,24 +105,34 @@ const CTACard: React.FC<Props> = props => {
           )}
 
           <>
-            <input
-              type="checkbox"
-              id="terms"
-              name="terms"
-              value="terms"
-              className="mr-2"
-              checked={isTOSChecked}
-              onChange={() => setIsTOSChecked(!isTOSChecked)}
-            />
-            <label
-              htmlFor="terms"
-              className="text-ui-600 ft-text-base"
-              style={{color: 'blue', textDecoration: 'underline'}}
-            >
+            <label htmlFor="terms" className="text-ui-600 ft-text-base">
+              <input
+                type="checkbox"
+                id="terms"
+                name="terms"
+                value="terms"
+                className="mr-2"
+                checked={isTOSChecked}
+                onChange={() => setIsTOSChecked(!isTOSChecked)}
+              />
               I have read and accept the{' '}
-              <a href="#">Aragon DAO Participation Agreement.</a>
+              <a href="#" style={{color: 'blue', textDecoration: 'underline'}}>
+                Aragon DAO Participation Agreement.
+              </a>
             </label>
           </>
+          <ButtonText
+            size="large"
+            label="Mint NFT"
+            onClick={() => {
+              if (!isTOSChecked) {
+                alert('Please accept the terms and conditions');
+                return;
+              } else {
+                props.onClick(selectedLocation);
+              }
+            }}
+          />
         </>
       )}
     </CTACardWrapper>

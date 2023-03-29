@@ -12,7 +12,7 @@ const CTACards = [
     actionLabel: i18n.t('cta.create.actionLabel'),
     path: CreateDAO,
     imgSrc: createDaoImg,
-    subtitle: 'hi',
+    subtitle: '',
     title: 'Start or join your local DAO',
   },
   // {
