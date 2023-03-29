@@ -1,4 +1,4 @@
-VERSION := 1.2
+VERSION := 1.3
 
 build:
 	docker build -t dao-app --platform linux/amd64 .
