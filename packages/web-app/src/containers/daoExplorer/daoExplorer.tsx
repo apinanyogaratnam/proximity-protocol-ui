@@ -9,7 +9,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {generatePath, useNavigate} from 'react-router-dom';
 import styled from 'styled-components';
-import { createApi } from 'unsplash-js';
+import {createApi} from 'unsplash-js';
 
 import {DaoCard} from 'components/daoCard';
 import {useDaos} from 'hooks/useDaos';
@@ -54,7 +54,7 @@ export const DaoExplorer = () => {
   const [displayedDaos, setDisplayedDaos] = useState(data);
   const [daoImages, setDaoImages] = useState([]);
 
-  const initialDaos = [
+  const [initialDaos, setInitialDaos] = useState([
     {
       name: 'Global',
       url: 'https://source.unsplash.com/1600x900/?global',
@@ -67,9 +67,9 @@ export const DaoExplorer = () => {
       name: 'Vancouver',
       url: 'https://source.unsplash.com/1600x900/?vancouver',
     },
-  ];
+  ]);
 
-  const getImage = async (name) => {
+  const getImage = async name => {
     const unsplashQuery = createApi({
       accessKey: secrets.UNSPLASH_ACCESS_KEY,
     });
@@ -77,23 +77,23 @@ export const DaoExplorer = () => {
       query: name,
       perPage: 1,
     });
-    console.log("unsplash response", res);
+    console.log('unsplash response', res);
     const response = await fetch(
       `https://api.unsplash.com/search/photos?query=${name}`,
       {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Client-ID ${secrets.UNSPLASH_ACCESS_KEY}`
+          Authorization: `Client-ID ${secrets.UNSPLASH_ACCESS_KEY}`,
         },
       }
     );
     const data = await response.json();
     const formattedData = {
-      username: res.response.results[0].user.username,
+      username: res.response.results[0].user.name,
       image: res.response.results[0].urls.regular,
     };
-    console.log("formatted data", formattedData);
+    console.log('formatted data', formattedData);
     return {
       username: data.results[0].user.username,
       image: data.results[0].urls.regular,
@@ -101,13 +101,12 @@ export const DaoExplorer = () => {
   };
 
   useEffect(() => {
-
     async function fetchImages() {
       const images = [];
       console.log('fetching images');
       for (let i = 0; i < initialDaos.length; i++) {
         const data = await getImage(initialDaos[i].name);
-        console.log("response", data);
+        console.log('response', data);
         images.push(data);
       }
       setDaoImages(images); // <-- update the daoImages state
@@ -179,7 +178,9 @@ export const DaoExplorer = () => {
               style={{
                 width: 'calc(50% - 20px)',
                 height: '300px',
-                backgroundImage: `url(${daoImages[index] && daoImages[index].image})`,
+                backgroundImage: `url(${
+                  daoImages[index] && daoImages[index].image
+                })`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
                 backgroundRepeat: 'no-repeat',

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import {ButtonText} from '@aragon/ui-components';
 import useScreen from 'hooks/useScreen';
@@ -66,6 +66,7 @@ const CTACard: React.FC<Props> = props => {
   const [mintPageVisible, setMintPageVisible] = React.useState(false);
   const [isTOSChecked, setIsTOSChecked] = React.useState(false);
   const {web3, account, balance, network, networkId, error} = useNewWallet();
+  const [mintedNft, setMintedNft] = useState(true);
   console.log('isAuthenticated', isAuthenticated);
   console.log('user', user);
 
@@ -125,28 +126,40 @@ const CTACard: React.FC<Props> = props => {
 
     const txReceipt = await web3.eth.sendTransaction(transaction);
     console.log(`NFT minted! Transaction hash: ${txReceipt.transactionHash}`);
+    setMintedNft(true);
   }
 
   return (
     <CTACardWrapper className={props.className}>
-      {!mintPageVisible && !isAuthenticated ? (
+      {mintedNft ? (
         <>
-          <Content>
-            <StyledImg src={props.imgSrc} />
-            <Title>{props.title}</Title>
-            <Subtitle>{props.subtitle}</Subtitle>
-          </Content>
+          <div>
+            {`Congratulations, you’re citizen #1 of ${selectedLocation}.`}
+          </div>
+          <div>
+            {`As the first citizen, you’ll automatically receive a Regional Leader NFT which will grant you special access to the Regional Leaders Discord channel [insert link]. Please note that this NFT is temporary and may be allocated to another citizen in the future, should they be elected as Regional Leader. `}
+          </div>
+        </>
+      ) : (
+        <>
+          {!mintPageVisible && !isAuthenticated ? (
+            <>
+              <Content>
+                <StyledImg src={props.imgSrc} />
+                <Title>{props.title}</Title>
+                <Subtitle>{props.subtitle}</Subtitle>
+              </Content>
 
-          <div
-            id="geocoder-input-container"
-            style={{
-              width: '100%',
-              border: '1px solid #eaeaea',
-              whiteSpace: 'nowrap',
-            }}
-          />
+              <div
+                id="geocoder-input-container"
+                style={{
+                  width: '100%',
+                  border: '1px solid #eaeaea',
+                  whiteSpace: 'nowrap',
+                }}
+              />
 
-          {/* <ButtonText
+              {/* <ButtonText
         size="large"
         label={props.actionLabel}
         {...(props.actionAvailable
@@ -155,70 +168,72 @@ const CTACard: React.FC<Props> = props => {
         onClick={() => props.onClick(selectedLocation)}
         className={`${!isDesktop && 'w-full'}`}
       /> */}
-          <ButtonText
-            size="large"
-            label="Let's Go"
-            onClick={() => {
-              if (!selectedLocation) {
-                alert('Please enter a location');
-                return;
-              } else {
-                setMintPageVisible(true);
-              }
-            }}
-          />
-        </>
-      ) : (
-        <>
-          <Content>
-            <Title>Verify you are human</Title>
-            <Subtitle>
-              We are using Auth0 and twilio to verify you are human.
-            </Subtitle>
-          </Content>
-
-          {isAuthenticated ? (
-            <ButtonText
-              size="large"
-              label="Logout"
-              onClick={() =>
-                logout({logoutParams: {returnTo: window.location.origin}})
-              }
-            />
-          ) : (
-            <ButtonText
-              size="large"
-              label="Login"
-              onClick={() => loginWithRedirect()}
-            />
-          )}
-
-          <>
-            <label htmlFor="terms" className="text-ui-600 ft-text-base">
-              <input
-                type="checkbox"
-                id="terms"
-                name="terms"
-                value="terms"
-                className="mr-2"
-                checked={isTOSChecked}
-                onChange={() => setIsTOSChecked(!isTOSChecked)}
+              <ButtonText
+                size="large"
+                label="Let's Go"
+                onClick={() => {
+                  if (!selectedLocation) {
+                    alert('Please enter a location');
+                    return;
+                  } else {
+                    setMintPageVisible(true);
+                  }
+                }}
               />
-              I have read and accept the{' '}
-              <a
-                href="https://aragon.org/terms-and-conditions"
-                style={{color: 'blue', textDecoration: 'underline'}}
-              >
-                Aragon DAO Participation Agreement.
-              </a>
-            </label>
-          </>
-          <ButtonText
-            size="large"
-            label="Mint NFT"
-            disabled={!isTOSChecked || !isAuthenticated}
-            onClick={async () => await mintNFT()}
-          />
+            </>
+          ) : (
+            <>
+              <Content>
+                <Title>Verify you are human</Title>
+                <Subtitle>
+                  We are using Auth0 and twilio to verify you are human.
+                </Subtitle>
+              </Content>
+
+              {isAuthenticated ? (
+                <ButtonText
+                  size="large"
+                  label="Logout"
+                  onClick={() =>
+                    logout({logoutParams: {returnTo: window.location.origin}})
+                  }
+                />
+              ) : (
+                <ButtonText
+                  size="large"
+                  label="Login"
+                  onClick={() => loginWithRedirect()}
+                />
+              )}
+
+              <>
+                <label htmlFor="terms" className="text-ui-600 ft-text-base">
+                  <input
+                    type="checkbox"
+                    id="terms"
+                    name="terms"
+                    value="terms"
+                    className="mr-2"
+                    checked={isTOSChecked}
+                    onChange={() => setIsTOSChecked(!isTOSChecked)}
+                  />
+                  I have read and accept the{' '}
+                  <a
+                    href=" https://docs.google.com/document/d/1KDtJ6zE9ATbsnModGbRiX_a6go9VJnuY/edit?usp=sharing&ouid=103669077276191563899&rtpof=true&sd=true"
+                    style={{color: 'blue', textDecoration: 'underline'}}
+                  >
+                    Aragon DAO Participation Agreement.
+                  </a>
+                </label>
+              </>
+              <ButtonText
+                size="large"
+                label="Mint NFT"
+                disabled={!isTOSChecked || !isAuthenticated}
+                onClick={async () => await mintNFT()}
+              />
+            </>
+          )}
         </>
       )}
     </CTACardWrapper>

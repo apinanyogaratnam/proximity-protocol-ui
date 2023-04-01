@@ -7,23 +7,25 @@ import {useWallet} from 'hooks/useWallet';
 import Logo from 'public/proximity-logo.png';
 import {useGlobalModalContext} from 'context/globalModals';
 import {Container, GridLayout} from 'components/layout';
+import {useNewWallet} from 'hooks/useNewWallet';
 
 const ExploreNav: React.FC = () => {
   const {t} = useTranslation();
-  const {address, ensName, ensAvatarUrl, isConnected, methods} = useWallet();
+  // const {address, ensName, ensAvatarUrl, isConnected, methods} = useWallet();
+  const {account} = useNewWallet();
   const {open} = useGlobalModalContext();
 
-  const handleWalletButtonClick = () => {
-    if (isConnected) {
-      open('wallet');
-      return;
-    }
-    methods.selectWallet().catch((err: Error) => {
-      // To be implemented: maybe add an error message when
-      // the error is different from closing the window
-      console.error(err);
-    });
-  };
+  // const handleWalletButtonClick = () => {
+  //   if (isConnected) {
+  //     open('wallet');
+  //     return;
+  //   }
+  //   methods.selectWallet().catch((err: Error) => {
+  //     // To be implemented: maybe add an error message when
+  //     // the error is different from closing the window
+  //     console.error(err);
+  //   });
+  // };
 
   return (
     <Container data-testid="navbar">
@@ -38,14 +40,12 @@ const ExploreNav: React.FC = () => {
           <RightContent>
             <ActionsWrapper>
               <ButtonWallet
-                src={ensAvatarUrl || address}
-                onClick={handleWalletButtonClick}
-                isConnected={isConnected}
-                label={
-                  isConnected
-                    ? ensName || address
-                    : t('navButtons.connectWallet')
+                src={null}
+                onClick={async () =>
+                  await window.ethereum.request({method: 'eth_requestAccounts'})
                 }
+                isConnected={Boolean(account)}
+                label={account ? account : 'Connect Wallet'}
               />
             </ActionsWrapper>
           </RightContent>
