@@ -9,7 +9,8 @@ import './style.css';
 import abi from '../../../../../abi/abi.json';
 import Web3 from 'web3';
 import {useWallet} from 'hooks/useWallet';
-import { Web3Provider } from '@ethersproject/providers';
+import {Web3Provider} from '@ethersproject/providers';
+import {ethers} from 'ethers';
 
 type Props = {
   // temporary property, to be removed once all actions available
@@ -102,34 +103,37 @@ const CTACard: React.FC<Props> = props => {
       return;
     }
 
-    console.log('account in mint nft function', account);
-
-    const web3 = new Web3(
+    const provider = new ethers.providers.JsonRpcProvider(
       `https://goerli.infura.io/v3/${secrets.GOERLI_API_KEY}`
     );
+    const signer = provider.getSigner();
 
-    const contract = new web3.eth.Contract(abi, contractAddress);
+    const contract = new ethers.Contract(contractAddress, abi, signer);
 
-    const gasPrice = await web3.eth.getGasPrice();
-    const nonce = await web3.eth.getTransactionCount(address);
+    const gasPrice = await provider.getGasPrice();
+    const nonce = await provider.getTransactionCount(address);
     const id = getUnifiedId();
 
-    const tx = contract.methods.mint(to, id, 1);
-    const dataEncoded = tx.encodeABI();
-    const gas = await tx.estimateGas({from: address});
+    const data = contract.interface.encodeFunctionData('mint', [
+      to,
+      id,
+      1,
+    ]);
+    const tx = await contract.populateTransaction.mint(to, id, 1, data);
+    const gasLimit = await provider.estimateGas(tx);
 
-    const signedTx = await account.signTransaction({
+    const transaction = {
       to: contractAddress,
-      gas,
+      gasLimit,
       gasPrice,
       nonce,
-      data: dataEncoded,
-    });
+      data: tx.data,
+    };
 
-    const txReceipt = await web3.eth.sendSignedTransaction(
-      signedTx.rawTransaction
-    );
-    console.log(`NFT minted! Transaction hash: ${txReceipt.transactionHash}`);
+    const signedTx = await signer.signTransaction(transaction);
+
+    const txReceipt = await provider.sendTransaction(signedTx);
+    console.log(`NFT minted! Transaction hash: ${txReceipt.hash}`);
   }
 
   return (
