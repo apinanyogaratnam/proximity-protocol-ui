@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import {GridLayout} from 'components/layout';
 import useScreen from 'hooks/useScreen';
 import Green from 'public/greenGradient.svg';
-import IconLogo from 'public/iconLogo.svg';
+import IconLogo from 'public/proximity-logo.png';
 import Purple from 'public/purpleGradient.svg';
 import {EXPLORE_NAV_LINKS, PRIVACY_NAV_LINKS} from 'utils/constants';
 
@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
       </GridLayout>
       <div className="flex z-10 justify-center items-center py-0.5 space-x-1 text-sm text-ui-0 bg-primary-400">
         <IconInfo />
-        <span>Aragon App Public Beta</span>
+        <span>Proximity App Public Beta</span>
       </div>
     </Section>
   );

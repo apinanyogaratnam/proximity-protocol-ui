@@ -5,6 +5,7 @@ import useScreen from 'hooks/useScreen';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import secrets from '../../../../../secret.json';
 import {useAuth0} from '@auth0/auth0-react';
+import './style.css';
 
 type Props = {
   // temporary property, to be removed once all actions available
@@ -22,21 +23,37 @@ const CTACard: React.FC<Props> = props => {
   const [value, setValue] = React.useState('');
   const [selectedLocation, setSelectedLocation] = React.useState('');
 
-  const geocoder = React.useMemo(() => {
-    return new MapboxGeocoder({
-      accessToken: secrets.MAPBOX_API_KEY,
-      placeholder: 'Enter a location',
-    });
-  }, []);
+  const geocoderRef = React.useRef<MapboxGeocoder | null>(null);
 
   React.useEffect(() => {
+    const geocoder = new MapboxGeocoder({
+      accessToken: secrets.MAPBOX_API_KEY,
+      placeholder: 'Enter your location',
+      render: (item: any) => {
+        // override the default suggestion item rendering to preserve the comma separator
+        return `<div style="white-space: nowrap;">${item.place_name}</div>`;
+      }
+    });
+
     geocoder.on('result', e => {
       setSelectedLocation(e.result.place_name);
     });
 
     const inputContainer = document.getElementById('geocoder-input-container');
     inputContainer.appendChild(geocoder.onAdd());
-  }, [geocoder]);
+
+    // save the geocoder instance to the ref
+    geocoderRef.current = geocoder;
+  }, []);
+
+  React.useEffect(() => {
+    if (geocoderRef.current) {
+      const inputElement = geocoderRef.current._inputEl;
+      if (inputElement) {
+        inputElement.style.width = "1000px";
+      }
+    }
+  }, [geocoderRef.current]);
 
   const {isDesktop} = useScreen();
   const {loginWithRedirect, isAuthenticated, user, logout} = useAuth0();
@@ -55,7 +72,14 @@ const CTACard: React.FC<Props> = props => {
             <Subtitle>{props.subtitle}</Subtitle>
           </Content>
 
-          <div id="geocoder-input-container" />
+          <div
+            id="geocoder-input-container"
+            style={{
+              width: '100%',
+              border: '1px solid #eaeaea',
+              whiteSpace: 'nowrap',
+            }}
+          />
 
           {/* <ButtonText
         size="large"

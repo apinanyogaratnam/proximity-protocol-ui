@@ -64,26 +64,26 @@ export const EXPLORE_NAV_LINKS = [
   },
   {
     label: i18n.t('navLinks.learn'),
-    path: 'https://aragon.org/education-portal',
+    path: '',
   },
   {
     label: i18n.t('navLinks.build'),
-    path: 'https://devs.aragon.org/',
+    path: '',
   },
   {
     label: i18n.t('navLinks.help'),
-    path: 'https://documentation.aragon.org/aragon/readme',
+    path: '',
   },
 ];
 
 export const PRIVACY_NAV_LINKS = [
   {
     label: i18n.t('navLinks.terms'),
-    path: 'https://aragon.org/terms-and-conditions',
+    path: '',
   },
   {
     label: i18n.t('navLinks.privacy'),
-    path: 'https://aragon.org/privacy-policy',
+    path: '',
   },
 ];
 
