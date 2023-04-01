@@ -46,12 +46,8 @@ export const useWallet = (): IUseWallet => {
       // provider?.getAvatar(address).then((avatarUrl: string | null) => {
       //   avatarUrl ? setEnsAvatarUrl(avatarUrl) : setEnsAvatarUrl('');
       // });
-      console.log('Provider:', provider);
-      console.log('Address:', address);
       provider.listAccounts().then((accounts: string[]) => {
-        console.log('Accounts:', accounts);
         if (accounts.length > 0) {
-          console.log('Account:', accounts[0]);
           setAccount(accounts[0]);
         }
       });

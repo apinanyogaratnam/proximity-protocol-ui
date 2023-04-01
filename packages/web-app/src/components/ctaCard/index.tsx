@@ -11,6 +11,7 @@ import Web3 from 'web3';
 import {useWallet} from 'hooks/useWallet';
 import {Web3Provider} from '@ethersproject/providers';
 import {ethers} from 'ethers';
+import {useNewWallet} from 'hooks/useNewWallet';
 
 type Props = {
   // temporary property, to be removed once all actions available
@@ -45,7 +46,7 @@ const CTACard: React.FC<Props> = props => {
     });
 
     const inputContainer = document.getElementById('geocoder-input-container');
-    inputContainer.appendChild(geocoder.onAdd());
+    if (inputContainer) inputContainer.appendChild(geocoder.onAdd());
 
     // save the geocoder instance to the ref
     geocoderRef.current = geocoder;
@@ -64,7 +65,7 @@ const CTACard: React.FC<Props> = props => {
   const {loginWithRedirect, isAuthenticated, user, logout} = useAuth0();
   const [mintPageVisible, setMintPageVisible] = React.useState(false);
   const [isTOSChecked, setIsTOSChecked] = React.useState(false);
-  const {address, ensName, ensAvatarUrl, isConnected, account} = useWallet();
+  const {web3, account, balance, network, networkId, error} = useNewWallet();
   console.log('isAuthenticated', isAuthenticated);
   console.log('user', user);
 
@@ -72,13 +73,11 @@ const CTACard: React.FC<Props> = props => {
 
   function encodeStringToInt(m: string): number {
     const mBytes: Uint8Array = new TextEncoder().encode(m);
-    const mInt = Number(
-      BigInt(
-        `0x${Array.from(mBytes)
-          .map(b => b.toString(16).padStart(2, '0'))
-          .join('')}`
-      ).valueOf()
-    );
+    const mInt = BigInt(
+      `0x${Array.from(mBytes)
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('')}`
+    ).valueOf();
     return mInt;
   }
 
@@ -97,43 +96,35 @@ const CTACard: React.FC<Props> = props => {
     return encodeStringToInt(builtString);
   };
 
-  async function mintNFT(to: string): Promise<void> {
-    if (!isConnected) {
-      alert('Please connect your wallet');
+  if (error) {
+    console.log('error occured in connect wallet', error);
+  }
+
+  async function mintNFT() {
+    if (!window.ethereum) {
+      alert('Please install Metamask');
       return;
     }
 
-    const provider = new ethers.providers.JsonRpcProvider(
-      `https://goerli.infura.io/v3/${secrets.GOERLI_API_KEY}`
-    );
-    const signer = provider.getSigner();
+    const contract = new web3.eth.Contract(abi, contractAddress);
 
-    const contract = new ethers.Contract(contractAddress, abi, signer);
-
-    const gasPrice = await provider.getGasPrice();
-    const nonce = await provider.getTransactionCount(address);
     const id = getUnifiedId();
 
-    const data = contract.interface.encodeFunctionData('mint', [
-      to,
-      id,
-      1,
-    ]);
-    const tx = await contract.populateTransaction.mint(to, id, 1, data);
-    const gasLimit = await provider.estimateGas(tx);
+    const tx = await contract.methods.mint(account, id, 1, '0x').encodeABI();
+    const gasLimit = await web3.eth.estimateGas({
+      to: contractAddress,
+      data: tx,
+    });
 
     const transaction = {
       to: contractAddress,
-      gasLimit,
-      gasPrice,
-      nonce,
-      data: tx.data,
+      gas: gasLimit,
+      data: tx,
+      from: account,
     };
 
-    const signedTx = await signer.signTransaction(transaction);
-
-    const txReceipt = await provider.sendTransaction(signedTx);
-    console.log(`NFT minted! Transaction hash: ${txReceipt.hash}`);
+    const txReceipt = await web3.eth.sendTransaction(transaction);
+    console.log(`NFT minted! Transaction hash: ${txReceipt.transactionHash}`);
   }
 
   return (
@@ -226,7 +217,7 @@ const CTACard: React.FC<Props> = props => {
             size="large"
             label="Mint NFT"
             disabled={!isTOSChecked || !isAuthenticated}
-            onClick={async () => await mintNFT(address)}
+            onClick={async () => await mintNFT()}
           />
         </>
       )}
