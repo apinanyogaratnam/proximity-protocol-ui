@@ -9,6 +9,7 @@ import React, {useEffect, useRef, useState} from 'react';
 import {useTranslation} from 'react-i18next';
 import {generatePath, useNavigate} from 'react-router-dom';
 import styled from 'styled-components';
+import { createApi } from 'unsplash-js';
 
 import {DaoCard} from 'components/daoCard';
 import {useDaos} from 'hooks/useDaos';
@@ -19,6 +20,7 @@ import {Dashboard} from 'utils/paths';
 import {useReactiveVar} from '@apollo/client';
 import {favoriteDaosVar} from 'context/apolloClient';
 import {useNetwork} from 'context/network';
+import secrets from '../../../../../secret.json';
 
 const EXPLORE_FILTER = ['favorite', 'newest', 'popular'] as const;
 
@@ -50,34 +52,92 @@ export const DaoExplorer = () => {
   const [skip, setSkip] = useState(0);
   const {data, isLoading} = useDaos(filterValue, PAGE_SIZE, skip);
   const [displayedDaos, setDisplayedDaos] = useState(data);
+  const [daoImages, setDaoImages] = useState([]);
+
+  const initialDaos = [
+    {
+      name: 'Global',
+      url: 'https://source.unsplash.com/1600x900/?global',
+    },
+    {
+      name: 'Toronto',
+      url: 'https://source.unsplash.com/1600x900/?toronto',
+    },
+    {
+      name: 'Vancouver',
+      url: 'https://source.unsplash.com/1600x900/?vancouver',
+    },
+  ];
+
+  const getImage = async (name) => {
+    const unsplashQuery = createApi({
+      accessKey: secrets.UNSPLASH_ACCESS_KEY,
+    });
+    const res = await unsplashQuery.search.getPhotos({
+      query: name,
+      perPage: 1,
+    });
+    console.log("unsplash response", res);
+    const response = await fetch(
+      `https://api.unsplash.com/search/photos?query=${name}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Client-ID ${secrets.UNSPLASH_ACCESS_KEY}`
+        },
+      }
+    );
+    const data = await response.json();
+    const formattedData = {
+      username: res.response.results[0].user.username,
+      image: res.response.results[0].urls.regular,
+    };
+    console.log("formatted data", formattedData);
+    return {
+      username: data.results[0].user.username,
+      image: data.results[0].urls.regular,
+    };
+  };
 
   useEffect(() => {
-    if (network && filterValue !== 'favorite') {
-      setDisplayedDaos([]);
+
+    async function fetchImages() {
+      const images = [];
+      console.log('fetching images');
+      for (let i = 0; i < initialDaos.length; i++) {
+        const data = await getImage(initialDaos[i].name);
+        console.log("response", data);
+        images.push(data);
+      }
+      setDaoImages(images); // <-- update the daoImages state
     }
 
+    if (daoImages.length === 0) {
+      fetchImages();
+    }
     // intentionally leaving filter value out
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [network]);
+  });
 
-  useEffect(() => {
-    if (data) {
-      if (filterRef.current !== filterValue) {
-        setDisplayedDaos(data);
-        filterRef.current = filterValue;
-      } else setDisplayedDaos(prev => [...prev, ...data]);
-    }
+  // useEffect(() => {
+  //   if (data) {
+  //     if (filterRef.current !== filterValue) {
+  //       setDisplayedDaos(data);
+  //       filterRef.current = filterValue;
+  //     } else setDisplayedDaos(prev => [...prev, ...data]);
+  //   }
 
-    // NOTE: somewhere up the chain, changing login state is creating new instance
-    // of the data from useDaos hook. Patching by doing proper data comparison
-    // using JSON.stringify. Proper investigation needs to be done
-    // [FF - 01/16/2023]
+  //   // NOTE: somewhere up the chain, changing login state is creating new instance
+  //   // of the data from useDaos hook. Patching by doing proper data comparison
+  //   // using JSON.stringify. Proper investigation needs to be done
+  //   // [FF - 01/16/2023]
 
-    // intentionally removing filterValue from the dependencies
-    // because the update to the ref needs to happen after data
-    // has changed only
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(data[0])]);
+  //   // intentionally removing filterValue from the dependencies
+  //   // because the update to the ref needs to happen after data
+  //   // has changed only
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [JSON.stringify(data[0])]);
 
   const filterWasChanged = filterRef.current !== filterValue;
 
@@ -99,105 +159,94 @@ export const DaoExplorer = () => {
   //   'https://source.unsplash.com/1600x900/?vancouver',
   // ];
 
-  const initialDaos = [
-    {
-      name: 'Global',
-      url: 'https://source.unsplash.com/1600x900/?global',
-    },
-    {
-      name: 'Toronto',
-      url: 'https://source.unsplash.com/1600x900/?toronto',
-    },
-    {
-      name: 'Vancouver',
-      url: 'https://source.unsplash.com/1600x900/?vancouver',
-    },
-  ];
-
-  const DAOS = () => (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        // width: '100%',
-        padding: '20px',
-        flexWrap: 'wrap',
-      }}
-    >
-      {initialDaos.map((dao, index) => (
-        <div
-          key={index}
-          style={{
-            width: 'calc(50% - 20px)',
-            height: '300px',
-            backgroundImage: `url(${dao.url})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-            borderRadius: '10px',
-            marginRight: '10px',
-            marginBottom: '20px',
-            cursor: 'pointer',
-            marginLeft: index % 2 === 0 ? '0' : '20px',
-            position: 'relative', // Add position to allow for absolute positioning of button
-          }}
-        >
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              backgroundColor: 'rgba(0, 0, 0, 0.5)',
-              borderRadius: '10px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
+  const DAOS = () => {
+    return (
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'center',
+          // width: '100%',
+          padding: '20px',
+          flexWrap: 'wrap',
+        }}
+      >
+        {initialDaos.map((dao, index) => {
+          return (
             <div
+              key={index}
               style={{
-                color: 'white',
-                fontSize: '20px',
-                fontWeight: 'bold',
+                width: 'calc(50% - 20px)',
+                height: '300px',
+                backgroundImage: `url(${daoImages[index] && daoImages[index].image})`,
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                backgroundRepeat: 'no-repeat',
+                borderRadius: '10px',
+                marginRight: '10px',
+                marginBottom: '20px',
+                cursor: 'pointer',
+                marginLeft: index % 2 === 0 ? '0' : '20px',
+                position: 'relative', // Add position to allow for absolute positioning of button
               }}
             >
-              {dao.name}
+              <div
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                  borderRadius: '10px',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+              >
+                <div
+                  style={{
+                    color: 'white',
+                    fontSize: '20px',
+                    fontWeight: 'bold',
+                  }}
+                >
+                  {dao.name}
+                </div>
+              </div>
+
+              <div // Add a new div for the button
+                style={{
+                  position: 'absolute',
+                  bottom: '20px',
+                  left: '20px',
+                  backgroundColor: 'white',
+                  color: 'blue',
+                  fontSize: '18px',
+                  fontWeight: 'bold',
+                  borderRadius: '20px',
+                  padding: '10px 20px',
+                  cursor: 'pointer',
+                }}
+              >
+                View
+              </div>
+
+              <div // Add a new div for the photo credit
+                style={{
+                  position: 'absolute',
+                  bottom: '20px',
+                  right: '20px',
+                  color: 'white',
+                  fontSize: '12px',
+                }}
+              >
+                Photo by {daoImages[index] && daoImages[index].username}
+              </div>
             </div>
-          </div>
-
-          <div // Add a new div for the button
-            style={{
-              position: 'absolute',
-              bottom: '20px',
-              left: '20px',
-              backgroundColor: 'white',
-              color: 'blue',
-              fontSize: '18px',
-              fontWeight: 'bold',
-              borderRadius: '20px',
-              padding: '10px 20px',
-              cursor: 'pointer',
-            }}
-          >
-            View
-          </div>
-
-          <div // Add a new div for the photo credit
-            style={{
-              position: 'absolute',
-              bottom: '20px',
-              right: '20px',
-              color: 'white',
-              fontSize: '12px',
-            }}
-          >
-            Photo by Apinan Yogaratnam
-          </div>
-        </div>
-      ))}
-    </div>
-  );
+          );
+        })}
+      </div>
+    );
+  };
 
   return (
     <Container>

@@ -20,6 +20,7 @@ import {useMappedBreadcrumbs} from 'hooks/useMappedBreadcrumbs';
 import {useWallet} from 'hooks/useWallet';
 import {NavlinksDropdown} from './breadcrumbDropdown';
 import NetworkIndicator from './networkIndicator';
+import {IoSettings} from 'react-icons/io5';
 
 const MIN_ROUTE_DEPTH_FOR_BREADCRUMBS = 2;
 
@@ -68,6 +69,7 @@ const DesktopNav: React.FC<DesktopNavProp> = props => {
               isConnected ? ensName || address : t('navButtons.connectWallet')
             }
           />
+          <IoSettings />
         </Menu>
       </Container>
     );

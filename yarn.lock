@@ -178,6 +178,7 @@
     "@aragon/ui-components" "^0.1.0"
     "@auth0/auth0-react" "^2.0.1"
     "@elastic/apm-rum-react" "^1.3.1"
+    "@ethersproject/providers" "^5.7.2"
     "@ledgerhq/connect-kit-loader" "^1.0.2"
     "@mapbox/mapbox-gl-geocoder" "^5.0.1"
     "@radix-ui/react-accordion" "^0.1.6"
@@ -208,16 +209,18 @@
     "react-dom" "^17.0.2"
     "react-hook-form" "^7.22.2"
     "react-i18next" "^11.12.0"
+    "react-icons" "^4.8.0"
     "react-mapbox-gl-geocoder" "^1.1.0"
     "react-responsive-carousel" "^3.2.23"
     "react-router-dom" "^6.0.2"
     "rudder-sdk-js" "^2.20.0"
     "styled-components" "^5.3.1"
     "tailwindcss-fluid-type" "^1.3.1"
+    "unsplash-js" "^7.0.15"
     "use-react-router-breadcrumbs" "^3.0.1"
     "use-wallet" "^0.13.4"
     "web3" "^1.9.0"
-    "web3modal" "1.9.7"
+    "web3modal" "^1.9.7"
 
 "@aragon/osx-ethers@^1.0.0":
   "integrity" "sha512-OmiyXG1TxvRYCLGThkEa2OHNEumWqZFYU8tzyzDFSskWmi70uTkoqR25ayaz8QaYOtYlVw9drzPFjJSX4RhZ/g=="
@@ -5986,6 +5989,11 @@
   "version" "3.4.35"
   dependencies:
     "@types/node" "*"
+
+"@types/content-type@^1.1.3":
+  "integrity" "sha512-dgMN+syt1xb7Hk8LU6AODOfPlvz5z1CbXpPuJE5ZrX9STfBOIXF09pEB8N7a97WT9dbngt3ksDCm6GW6yMrxfQ=="
+  "resolved" "https://registry.npmjs.org/@types/content-type/-/content-type-1.1.5.tgz"
+  "version" "1.1.5"
 
 "@types/cssnano@^4.0.1":
   "integrity" "sha512-hGOroxRTBkYl5gSBRJOffhV4+io+Y2bFX1VP7LgKEVHJt/LPPJaWUIuDAz74Vlp7l7hCDZfaDi7iPxwNwuVA4Q=="
@@ -24588,6 +24596,11 @@
     "@babel/runtime" "^7.14.5"
     "html-parse-stringify" "^3.0.1"
 
+"react-icons@^4.8.0":
+  "integrity" "sha512-N6+kOLcihDiAnj5Czu637waJqSnwlMNROzVZMhfX68V/9bu9qHaMIJC4UdozWoOk57gahFCNHwVvWzm0MTzRjg=="
+  "resolved" "https://registry.npmjs.org/react-icons/-/react-icons-4.8.0.tgz"
+  "version" "4.8.0"
+
 "react-inspector@^5.1.0":
   "integrity" "sha512-GURDaYzoLbW8pMGXwYPDBIv6nqei4kK7LPRZ9q9HCZF54wqXz/dnylBp/kfE9XmekBhHvLDdcYeyIwSrvtOiWg=="
   "resolved" "https://registry.npmjs.org/react-inspector/-/react-inspector-5.1.1.tgz"
@@ -28840,6 +28853,14 @@
   dependencies:
     "has-value" "^0.3.1"
     "isobject" "^3.0.0"
+
+"unsplash-js@^7.0.15":
+  "integrity" "sha512-WGqKp9wl2m2tAUPyw2eMZs/KICR+A52tCaRapzVXWxkA4pjHqsaGwiJXTEW7hBy4Pu0QmP6KxTt2jST3tluawA=="
+  "resolved" "https://registry.npmjs.org/unsplash-js/-/unsplash-js-7.0.15.tgz"
+  "version" "7.0.15"
+  dependencies:
+    "@types/content-type" "^1.1.3"
+    "content-type" "^1.0.4"
 
 "untildify@^4.0.0":
   "integrity" "sha512-KK8xQ1mkzZeg9inewmFVDNkg3l5LUhoq9kN6iWYB/CC9YMG8HA+c1Q8HwDe6dEX7kErrEVNVBO3fWsVq5iDgtw=="
