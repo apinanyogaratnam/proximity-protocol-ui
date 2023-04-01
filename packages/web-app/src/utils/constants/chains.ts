@@ -1,8 +1,11 @@
 /* SUPPORTED NETWORK TYPES ================================================== */
 
 import {INFURA_PROJECT_ID} from './api';
+import secrets from '../../../../../secret.json';
 
-export const SUPPORTED_CHAIN_ID = [1, 5, 137, 80001, 42161, 421613] as const;
+export const SUPPORTED_CHAIN_ID = [
+  1, 5, 137, 80001, 42161, 421613, 1337, 31337,
+] as const;
 export type SupportedChainID = typeof SUPPORTED_CHAIN_ID[number];
 
 export function isSupportedChainId(
@@ -18,6 +21,7 @@ const SUPPORTED_NETWORKS = [
   'mumbai',
   'arbitrum',
   'arbitrum-test',
+  'localhost',
 ] as const;
 export type SupportedNetworks =
   | typeof SUPPORTED_NETWORKS[number]
@@ -145,8 +149,8 @@ export const CHAIN_METADATA: ChainList = {
     explorer: 'https://goerli.etherscan.io/',
     testnet: true,
     rpc: [
-      `https://goerli.infura.io/v3/${INFURA_PROJECT_ID['goerli']}`,
-      `wss://goerli.infura.io/ws/v3/${INFURA_PROJECT_ID['goerli']}`,
+      `https://goerli.infura.io/v3/${secrets.GOERLI_API_KEY}`,
+      `wss://goerli.infura.io/ws/v3/${secrets.GOERLI_API_KEY}`,
     ],
     nativeCurrency: {
       name: 'Goerli Ether',
@@ -173,6 +177,9 @@ export const CHAIN_METADATA: ChainList = {
       decimals: 18,
     },
     etherscanApi: 'https://api-testnet.polygonscan.com/api',
+  },
+  localhost: {
+    id: 1337,
   },
   unsupported: {
     id: 1,

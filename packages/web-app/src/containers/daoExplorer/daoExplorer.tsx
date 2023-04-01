@@ -141,6 +141,7 @@ export const DaoExplorer = () => {
             marginBottom: '20px',
             cursor: 'pointer',
             marginLeft: index % 2 === 0 ? '0' : '20px',
+            position: 'relative', // Add position to allow for absolute positioning of button
           }}
         >
           <div
@@ -163,6 +164,35 @@ export const DaoExplorer = () => {
             >
               {dao.name}
             </div>
+          </div>
+
+          <div // Add a new div for the button
+            style={{
+              position: 'absolute',
+              bottom: '20px',
+              left: '20px',
+              backgroundColor: 'white',
+              color: 'blue',
+              fontSize: '18px',
+              fontWeight: 'bold',
+              borderRadius: '20px',
+              padding: '10px 20px',
+              cursor: 'pointer',
+            }}
+          >
+            View
+          </div>
+
+          <div // Add a new div for the photo credit
+            style={{
+              position: 'absolute',
+              bottom: '20px',
+              right: '20px',
+              color: 'white',
+              fontSize: '12px',
+            }}
+          >
+            Photo by Apinan Yogaratnam
           </div>
         </div>
       ))}

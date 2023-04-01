@@ -30,6 +30,8 @@ const translateNetwork = (
       return 'ethereum';
     case 'goerli':
       return 'goerli';
+    case 'localhost':
+      return 'localhost';
   }
   return 'unsupported';
 };
@@ -94,6 +96,8 @@ export const UseClientProvider: React.FC = ({children}) => {
         },
       ],
     };
+
+    console.log('contextParams', contextParams);
 
     const sdkContext = new SdkContext(contextParams);
 

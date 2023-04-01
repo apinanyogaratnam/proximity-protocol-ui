@@ -6,6 +6,10 @@ import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import secrets from '../../../../../secret.json';
 import {useAuth0} from '@auth0/auth0-react';
 import './style.css';
+import abi from '../../../../../abi/abi.json';
+import Web3 from 'web3';
+import {useWallet} from 'hooks/useWallet';
+import { Web3Provider } from '@ethersproject/providers';
 
 type Props = {
   // temporary property, to be removed once all actions available
@@ -59,8 +63,74 @@ const CTACard: React.FC<Props> = props => {
   const {loginWithRedirect, isAuthenticated, user, logout} = useAuth0();
   const [mintPageVisible, setMintPageVisible] = React.useState(false);
   const [isTOSChecked, setIsTOSChecked] = React.useState(false);
+  const {address, ensName, ensAvatarUrl, isConnected, account} = useWallet();
   console.log('isAuthenticated', isAuthenticated);
   console.log('user', user);
+
+  const contractAddress = '0x441cB156A7D11CCA0922Ef1d9b66e8c0BC5674fe';
+
+  function encodeStringToInt(m: string): number {
+    const mBytes: Uint8Array = new TextEncoder().encode(m);
+    const mInt = Number(
+      BigInt(
+        `0x${Array.from(mBytes)
+          .map(b => b.toString(16).padStart(2, '0'))
+          .join('')}`
+      ).valueOf()
+    );
+    return mInt;
+  }
+
+  function decodeIntToString(mInt: number): string {
+    const hexString: string = mInt.toString(16);
+    const mBytes: Uint8Array = new Uint8Array(hexString.length / 2);
+    for (let i = 0; i < hexString.length; i += 2) {
+      mBytes[i / 2] = parseInt(hexString.substr(i, 2), 16);
+    }
+    const m: string = new TextDecoder().decode(mBytes);
+    return m;
+  }
+
+  const getUnifiedId = () => {
+    const builtString = `${user.email}-${selectedLocation}`;
+    return encodeStringToInt(builtString);
+  };
+
+  async function mintNFT(to: string): Promise<void> {
+    if (!isConnected) {
+      alert('Please connect your wallet');
+      return;
+    }
+
+    console.log('account in mint nft function', account);
+
+    const web3 = new Web3(
+      `https://goerli.infura.io/v3/${secrets.GOERLI_API_KEY}`
+    );
+
+    const contract = new web3.eth.Contract(abi, contractAddress);
+
+    const gasPrice = await web3.eth.getGasPrice();
+    const nonce = await web3.eth.getTransactionCount(address);
+    const id = getUnifiedId();
+
+    const tx = contract.methods.mint(to, id, 1);
+    const dataEncoded = tx.encodeABI();
+    const gas = await tx.estimateGas({from: address});
+
+    const signedTx = await account.signTransaction({
+      to: contractAddress,
+      gas,
+      gasPrice,
+      nonce,
+      data: dataEncoded,
+    });
+
+    const txReceipt = await web3.eth.sendSignedTransaction(
+      signedTx.rawTransaction
+    );
+    console.log(`NFT minted! Transaction hash: ${txReceipt.transactionHash}`);
+  }
 
   return (
     <CTACardWrapper className={props.className}>
@@ -152,15 +222,7 @@ const CTACard: React.FC<Props> = props => {
             size="large"
             label="Mint NFT"
             disabled={!isTOSChecked || !isAuthenticated}
-            onClick={() => {
-              if (!isTOSChecked) {
-                alert('Please accept the terms and conditions');
-                return;
-              } else {
-                // props.onClick(selectedLocation);
-                alert('Minting NFT coming soon!');
-              }
-            }}
+            onClick={async () => await mintNFT(address)}
           />
         </>
       )}
