@@ -32,7 +32,7 @@ const CTACard: React.FC<Props> = props => {
       render: (item: any) => {
         // override the default suggestion item rendering to preserve the comma separator
         return `<div style="white-space: nowrap;">${item.place_name}</div>`;
-      }
+      },
     });
 
     geocoder.on('result', e => {
@@ -50,7 +50,7 @@ const CTACard: React.FC<Props> = props => {
     if (geocoderRef.current) {
       const inputElement = geocoderRef.current._inputEl;
       if (inputElement) {
-        inputElement.style.width = "1000px";
+        inputElement.style.width = '1000px';
       }
     }
   }, [geocoderRef.current]);
