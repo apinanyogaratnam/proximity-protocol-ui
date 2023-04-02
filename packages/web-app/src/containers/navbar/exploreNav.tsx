@@ -8,6 +8,7 @@ import Logo from 'public/proximity-logo.png';
 import {useGlobalModalContext} from 'context/globalModals';
 import {Container, GridLayout} from 'components/layout';
 import {useNewWallet} from 'hooks/useNewWallet';
+import { IoSettings } from 'react-icons/io5';
 
 const ExploreNav: React.FC = () => {
   const {t} = useTranslation();
@@ -48,6 +49,9 @@ const ExploreNav: React.FC = () => {
                 label={account ? account : 'Connect Wallet'}
               />
             </ActionsWrapper>
+            <button onClick={}>
+            <IoSettings />
+            </button>
           </RightContent>
         </GridLayout>
       </Menu>
