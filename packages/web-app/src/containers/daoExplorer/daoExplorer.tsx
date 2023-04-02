@@ -114,7 +114,7 @@ export const DaoExplorer = () => {
     const isExistingLocation = initialDaos.some(dao => dao.name === countryName);
     if (!isExistingLocation) {
       console.log('querying location append daos', countryName);
-      const image = await getImage(location);
+      const image = await getImage(countryName);
       setInitialDaos(prev => [...prev, {name: countryName, url: image.image}]);
     }
   };
