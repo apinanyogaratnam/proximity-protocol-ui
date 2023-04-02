@@ -21,6 +21,9 @@ import {useReactiveVar} from '@apollo/client';
 import {favoriteDaosVar} from 'context/apolloClient';
 import {useNetwork} from 'context/network';
 import secrets from '../../../../../secret.json';
+import {useNewWallet} from 'hooks/useNewWallet';
+import abi from '../../../../../abi/abi.json';
+import {decodeIntToString, getCountryName} from 'utils/idUnified';
 
 const EXPLORE_FILTER = ['favorite', 'newest', 'popular'] as const;
 
@@ -53,19 +56,12 @@ export const DaoExplorer = () => {
   const {data, isLoading} = useDaos(filterValue, PAGE_SIZE, skip);
   const [displayedDaos, setDisplayedDaos] = useState(data);
   const [daoImages, setDaoImages] = useState([]);
+  const {web3, account} = useNewWallet();
 
   const [initialDaos, setInitialDaos] = useState([
     {
       name: 'Global',
       url: 'https://source.unsplash.com/1600x900/?global',
-    },
-    {
-      name: 'Toronto',
-      url: 'https://source.unsplash.com/1600x900/?toronto',
-    },
-    {
-      name: 'Vancouver',
-      url: 'https://source.unsplash.com/1600x900/?vancouver',
     },
   ]);
 
@@ -100,6 +96,29 @@ export const DaoExplorer = () => {
     };
   };
 
+  const getUserNft = async (
+    userAddress: string,
+    contractAddress: string
+  ): Promise<BigInt> => {
+    const contract = new web3.eth.Contract(abi, contractAddress);
+    const nftId = await contract.methods.nftId(userAddress).call();
+    return nftId;
+  };
+
+  const appendDaos = async () => {
+    console.log('appending daos');
+    const nftId = await getUserNft(account, secrets.CONTRACT_ADDRESS);
+    console.log('nftId', nftId);
+    // const str = decodeIntToString(nftId);
+    const countryName = await getCountryName(`country.${nftId}`);
+    const isExistingLocation = initialDaos.some(dao => dao.name === countryName);
+    if (!isExistingLocation) {
+      console.log('querying location append daos', countryName);
+      const image = await getImage(location);
+      setInitialDaos(prev => [...prev, {name: countryName, url: image.image}]);
+    }
+  };
+
   useEffect(() => {
     async function fetchImages() {
       const images = [];
@@ -114,6 +133,7 @@ export const DaoExplorer = () => {
 
     if (daoImages.length === 0) {
       fetchImages();
+      appendDaos();
     }
     // intentionally leaving filter value out
     // eslint-disable-next-line react-hooks/exhaustive-deps
