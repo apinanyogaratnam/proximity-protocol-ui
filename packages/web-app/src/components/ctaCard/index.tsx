@@ -194,9 +194,9 @@ const CTACard: React.FC<Props> = props => {
             {!isMinting ? (
               <ButtonText
                 size="large"
-                label="Mint NFT"
+                label="Deploy a DAO"
                 disabled={!isTOSChecked || !isAuthenticated}
-                onClick={async () => await mintNFT()}
+                onClick={() => alert('!TODO: logic for deploying a dao')}
               />
             ) : (
               <ClipLoader color="#000" loading={true} size={150} />

@@ -42,7 +42,7 @@ const Footer: React.FC = () => {
                 <FlexDiv>
                   <StyledNavList>{PrivacyNavLinks}</StyledNavList>
                   <Copyright>
-                    &copy;{`  ${new Date().getFullYear()}  `}Proximity
+                    &copy;{`  ${new Date().getFullYear()}  `}AI3
                   </Copyright>
                 </FlexDiv>
               </>
@@ -52,7 +52,7 @@ const Footer: React.FC = () => {
                 <StyledNavList>{ExploreNavLinks}</StyledNavList>
                 <StyledNavList>{PrivacyNavLinks}</StyledNavList>
                 <Copyright>
-                  &copy;{`  ${new Date().getFullYear()}  `}Proximity
+                  &copy;{`  ${new Date().getFullYear()}  `}AI3
                 </Copyright>
               </>
             )}
@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
       </GridLayout>
       <div className="flex z-10 justify-center items-center py-0.5 space-x-1 text-sm text-ui-0 bg-primary-400">
         <IconInfo />
-        <span>Proximity App Public Beta</span>
+        <span>AI3 App Public Beta</span>
       </div>
     </Section>
   );
