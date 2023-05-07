@@ -49,7 +49,7 @@ const ExploreNav: React.FC = () => {
                 label={account ? account : 'Connect Wallet'}
               />
             </ActionsWrapper>
-            <button onClick={}>
+            <button onClick={undefined}>
             <IoSettings />
             </button>
           </RightContent>
