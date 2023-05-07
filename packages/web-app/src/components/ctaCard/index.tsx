@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import {ButtonText} from '@aragon/ui-components';
 import useScreen from 'hooks/useScreen';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
-import secrets from '../../../../../secret.json';
 import {useAuth0} from '@auth0/auth0-react';
 import './style.css';
 import abi from '../../../../../abi/abi.json';
@@ -38,7 +37,7 @@ const CTACard: React.FC<Props> = props => {
 
   React.useEffect(() => {
     const geocoder = new MapboxGeocoder({
-      accessToken: secrets.MAPBOX_API_KEY,
+      accessToken: process.env.MAPBOX_API_KEY as string,
       placeholder: 'Enter your location',
       render: (item: any) => {
         // override the default suggestion item rendering to preserve the comma separator
@@ -87,7 +86,7 @@ const CTACard: React.FC<Props> = props => {
   console.log('isAuthenticated', isAuthenticated);
   console.log('user', user);
 
-  const contractAddress = secrets.CONTRACT_ADDRESS;
+  const contractAddress = process.env.CONTRACT_ADDRESS as string;
 
   const getUnifiedId = () => {
     const builtString = `${selectedCountry}-${selectedRegion}}`;

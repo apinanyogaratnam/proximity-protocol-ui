@@ -22,7 +22,6 @@ import {UseClientProvider} from 'hooks/useClient';
 import {infuraApiKey} from 'utils/constants';
 import App from './app';
 import {Auth0Provider} from '@auth0/auth0-react';
-import secret from '../../../secret.json';
 
 const providerOptions: IProviderOptions = {
   walletconnect: {
@@ -77,7 +76,7 @@ ReactDOM.render(
                             >
                               <Auth0Provider
                                 domain="dev-pydmztrrjhsxf7fv.us.auth0.com"
-                                clientId={secret.AUTH0_CLIENT_ID}
+                                clientId={process.env.AUTH0_CLIENT_ID as string}
                                 authorizationParams={{
                                   redirect_uri: window.location.origin,
                                 }}
