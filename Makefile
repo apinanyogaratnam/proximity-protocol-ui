@@ -13,3 +13,4 @@ run:
 	docker stop $$(docker ps -aq)
 	docker pull apinanyogaratnam/dao-app:${VERSION}
 	docker run -p 9080:9080 -d apinanyogaratnam/dao-app:${VERSION}
+
