@@ -138,7 +138,8 @@ export const DaoExplorer = () => {
 
     if (daoImages.length === 0) {
       fetchImages();
-      appendDaos();
+      // !TODO: append daos logic when getting dao's from the sdk
+      // appendDaos();
     }
     // intentionally leaving filter value out
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -251,6 +252,9 @@ export const DaoExplorer = () => {
                   borderRadius: '20px',
                   padding: '10px 20px',
                   cursor: 'pointer',
+                }}
+                onClick={() => {
+                  alert('!TODO: join dao');
                 }}
               >
                 View

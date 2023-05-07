@@ -1,19 +1,19 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import {ButtonText} from '@aragon/ui-components';
+import { ButtonText } from '@aragon/ui-components';
 import useScreen from 'hooks/useScreen';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import secrets from '../../../../../secret.json';
-import {useAuth0} from '@auth0/auth0-react';
+import { useAuth0 } from '@auth0/auth0-react';
 import './style.css';
 import abi from '../../../../../abi/abi.json';
 import globalAbi from '../../../../../abi/globalAbi.json';
 import Web3 from 'web3';
-import {useWallet} from 'hooks/useWallet';
-import {Web3Provider} from '@ethersproject/providers';
-import {ethers} from 'ethers';
-import {useNewWallet} from 'hooks/useNewWallet';
-import {encodeStringToInt} from 'utils/idUnified';
+import { useWallet } from 'hooks/useWallet';
+import { Web3Provider } from '@ethersproject/providers';
+import { ethers } from 'ethers';
+import { useNewWallet } from 'hooks/useNewWallet';
+import { encodeStringToInt } from 'utils/idUnified';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 type Props = {
@@ -77,11 +77,11 @@ const CTACard: React.FC<Props> = props => {
     }
   }, [geocoderRef.current]);
 
-  const {isDesktop} = useScreen();
-  const {loginWithRedirect, isAuthenticated, user, logout} = useAuth0();
+  const { isDesktop } = useScreen();
+  const { loginWithRedirect, isAuthenticated, user, logout } = useAuth0();
   const [mintPageVisible, setMintPageVisible] = React.useState(false);
   const [isTOSChecked, setIsTOSChecked] = React.useState(false);
-  const {web3, account, balance, network, networkId, error} = useNewWallet();
+  const { web3, account, balance, network, networkId, error } = useNewWallet();
   const [isMinting, setIsMinting] = useState(false);
   const [mintedNft, setMintedNft] = useState(false);
   console.log('isAuthenticated', isAuthenticated);
@@ -147,102 +147,61 @@ const CTACard: React.FC<Props> = props => {
         </>
       ) : (
         <>
-          {!mintPageVisible && (!isAuthenticated || !selectedLocation) ? (
-            <>
-              <Content>
-                <StyledImg src={props.imgSrc} />
-                <Title>{props.title}</Title>
-                <Subtitle>{props.subtitle}</Subtitle>
-              </Content>
+          <>
+            <Content>
+              <Title>Verify you are human</Title>
+              <Subtitle>
+                We are using Auth0 and twilio to verify you are human.
+              </Subtitle>
+            </Content>
 
-              <div
-                id="geocoder-input-container"
-                style={{
-                  width: '100%',
-                  border: '1px solid #eaeaea',
-                  whiteSpace: 'nowrap',
-                }}
-              />
-
-              {/* <ButtonText
-        size="large"
-        label={props.actionLabel}
-        {...(props.actionAvailable
-          ? { mode: 'primary' }
-          : { mode: 'ghost', disabled: true })}
-        onClick={() => props.onClick(selectedLocation)}
-        className={`${!isDesktop && 'w-full'}`}
-      /> */}
+            {isAuthenticated ? (
               <ButtonText
                 size="large"
-                label="Let's Go"
-                onClick={() => {
-                  if (!selectedLocation) {
-                    alert('Please enter a location');
-                    return;
-                  } else {
-                    setMintPageVisible(true);
-                  }
-                }}
+                label="Logout"
+                onClick={() =>
+                  logout({ logoutParams: { returnTo: window.location.origin } })
+                }
               />
-            </>
-          ) : (
+            ) : (
+              <ButtonText
+                size="large"
+                label="Login"
+                onClick={() => loginWithRedirect()}
+              />
+            )}
+
             <>
-              <Content>
-                <Title>Verify you are human</Title>
-                <Subtitle>
-                  We are using Auth0 and twilio to verify you are human.
-                </Subtitle>
-              </Content>
-
-              {isAuthenticated ? (
-                <ButtonText
-                  size="large"
-                  label="Logout"
-                  onClick={() =>
-                    logout({logoutParams: {returnTo: window.location.origin}})
-                  }
+              <label htmlFor="terms" className="text-ui-600 ft-text-base">
+                <input
+                  type="checkbox"
+                  id="terms"
+                  name="terms"
+                  value="terms"
+                  className="mr-2"
+                  checked={isTOSChecked}
+                  onChange={() => setIsTOSChecked(!isTOSChecked)}
                 />
-              ) : (
-                <ButtonText
-                  size="large"
-                  label="Login"
-                  onClick={() => loginWithRedirect()}
-                />
-              )}
-
-              <>
-                <label htmlFor="terms" className="text-ui-600 ft-text-base">
-                  <input
-                    type="checkbox"
-                    id="terms"
-                    name="terms"
-                    value="terms"
-                    className="mr-2"
-                    checked={isTOSChecked}
-                    onChange={() => setIsTOSChecked(!isTOSChecked)}
-                  />
-                  I have read and accept the{' '}
-                  <a
-                    href=" https://docs.google.com/document/d/1KDtJ6zE9ATbsnModGbRiX_a6go9VJnuY/edit?usp=sharing&ouid=103669077276191563899&rtpof=true&sd=true"
-                    style={{color: 'blue', textDecoration: 'underline'}}
-                  >
-                    Aragon DAO Participation Agreement.
-                  </a>
-                </label>
-              </>
-              {!isMinting ? (
-                <ButtonText
-                  size="large"
-                  label="Mint NFT"
-                  disabled={!isTOSChecked || !isAuthenticated}
-                  onClick={async () => await mintNFT()}
-                />
-              ) : (
-                <ClipLoader color="#000" loading={true} size={150} />
-              )}
+                I have read and accept the{' '}
+                <a
+                  href=" https://docs.google.com/document/d/1KDtJ6zE9ATbsnModGbRiX_a6go9VJnuY/edit?usp=sharing&ouid=103669077276191563899&rtpof=true&sd=true"
+                  style={{ color: 'blue', textDecoration: 'underline' }}
+                >
+                  Aragon DAO Participation Agreement.
+                </a>
+              </label>
             </>
-          )}
+            {!isMinting ? (
+              <ButtonText
+                size="large"
+                label="Deploy a DAO"
+                disabled={!isTOSChecked || !isAuthenticated}
+                onClick={() => alert('!TODO: logic for deploying a dao')}
+              />
+            ) : (
+              <ClipLoader color="#000" loading={true} size={150} />
+            )}
+          </>
         </>
       )}
     </CTACardWrapper>

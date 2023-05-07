@@ -50,7 +50,7 @@ const ExploreNav: React.FC = () => {
               />
             </ActionsWrapper>
             <button onClick={undefined}>
-            <IoSettings />
+            {/* <IoSettings /> */}
             </button>
           </RightContent>
         </GridLayout>
