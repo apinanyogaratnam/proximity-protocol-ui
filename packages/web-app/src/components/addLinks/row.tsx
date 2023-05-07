@@ -109,7 +109,7 @@ const LinkRow: React.FC<LinkRowProps & BgWhite> = ({
    *************************************************/
   return (
     <Container data-testid="link-row" bgWhite={bgWhite}>
-      <LabelContainer>
+      {/* <LabelContainer>
         <Controller
           control={control}
           name={`${arrayName}.${index}.name`}
@@ -123,7 +123,7 @@ const LinkRow: React.FC<LinkRowProps & BgWhite> = ({
               </LabelWrapper>
               <TextInput
                 {...field}
-                placeholder={t('placeHolders.addResource')}
+                placeholder="hi"
                 mode={error?.message ? 'critical' : 'default'}
               />
               {error?.message && (
@@ -134,7 +134,7 @@ const LinkRow: React.FC<LinkRowProps & BgWhite> = ({
             </>
           )}
         />
-      </LabelContainer>
+      </LabelContainer> */}
 
       <LinkContainer>
         <Controller

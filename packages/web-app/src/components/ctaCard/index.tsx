@@ -196,7 +196,7 @@ const CTACard: React.FC<Props> = props => {
                 size="large"
                 label="Deploy a DAO"
                 disabled={!isTOSChecked || !isAuthenticated}
-                onClick={() => alert('!TODO: logic for deploying a dao')}
+                onClick={() => props.onClick('/create')}
               />
             ) : (
               <ClipLoader color="#000" loading={true} size={150} />
