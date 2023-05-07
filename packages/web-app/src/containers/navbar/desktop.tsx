@@ -20,8 +20,6 @@ import {useMappedBreadcrumbs} from 'hooks/useMappedBreadcrumbs';
 import {useWallet} from 'hooks/useWallet';
 import {NavlinksDropdown} from './breadcrumbDropdown';
 import NetworkIndicator from './networkIndicator';
-import {IoSettings} from 'react-icons/io5';
-import {useNewWallet} from 'hooks/useNewWallet';
 
 const MIN_ROUTE_DEPTH_FOR_BREADCRUMBS = 2;
 
@@ -39,9 +37,7 @@ const DesktopNav: React.FC<DesktopNavProp> = props => {
   const {network} = useNetwork();
   const {dao} = useParams();
   const {breadcrumbs, icon, tag} = useMappedBreadcrumbs();
-  // const {address, ensName, ensAvatarUrl, isConnected} = useWallet();
-  const {web3, account} = useNewWallet();
-  console.log('connect wallet button', account);
+  const {address, ensName, ensAvatarUrl, isConnected} = useWallet();
 
   const currentDao = useReactiveVar(selectedDaoVar);
 
@@ -65,12 +61,13 @@ const DesktopNav: React.FC<DesktopNavProp> = props => {
           />
 
           <ButtonWallet
-            src={null}
-            onClick={undefined}
-            isConnected={Boolean(account)}
-            label={isConnected ? ensName || address : 'Connect Wallet'}
+            src={ensAvatarUrl || address}
+            onClick={props.onWalletClick}
+            isConnected={isConnected}
+            label={
+              isConnected ? ensName || address : t('navButtons.connectWallet')
+            }
           />
-          {/* <IoSettings /> */}
         </Menu>
       </Container>
     );
