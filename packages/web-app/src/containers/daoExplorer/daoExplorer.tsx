@@ -84,15 +84,20 @@ export const DaoExplorer = () => {
       }
     );
     const data = await response.json();
-    const formattedData = {
-      username: res.response.results[0].user.name,
-      image: res.response.results[0].urls.regular,
-    };
+    let formattedData;
+    try {
+      formattedData = {
+        username: res.response.results[0].user.name,
+        image: res.response.results[0].urls.regular,
+      };
+    } catch (e) {
+      formattedData = {
+        username: null,
+        image: null,
+      };
+    }
     console.log('formatted data', formattedData);
-    return {
-      username: data.results[0].user.username,
-      image: data.results[0].urls.regular,
-    };
+    return formattedData;
   };
 
   const getUserNft = async (
