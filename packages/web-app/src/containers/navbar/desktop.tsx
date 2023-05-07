@@ -70,7 +70,7 @@ const DesktopNav: React.FC<DesktopNavProp> = props => {
             isConnected={Boolean(account)}
             label={isConnected ? ensName || address : 'Connect Wallet'}
           />
-          <IoSettings />
+          {/* <IoSettings /> */}
         </Menu>
       </Container>
     );

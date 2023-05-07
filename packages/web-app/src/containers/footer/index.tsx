@@ -38,7 +38,7 @@ const Footer: React.FC = () => {
                 <FlexDiv>
                   <StyledNavList>{PrivacyNavLinks}</StyledNavList>
                   <Copyright>
-                    &copy;{`  ${new Date().getFullYear()}  `}Proximity
+                    &copy;{`  ${new Date().getFullYear()}  `}AI3
                   </Copyright>
                 </FlexDiv>
               </>
@@ -48,7 +48,7 @@ const Footer: React.FC = () => {
                 <StyledNavList>{ExploreNavLinks}</StyledNavList>
                 <StyledNavList>{PrivacyNavLinks}</StyledNavList>
                 <Copyright>
-                  &copy;{`  ${new Date().getFullYear()}  `}Proximity
+                  &copy;{`  ${new Date().getFullYear()}  `}AI3
                 </Copyright>
               </>
             )}
@@ -61,7 +61,7 @@ const Footer: React.FC = () => {
         }`}
       >
         <IconInfo />
-        <span>Proximity Protocol</span>
+        <span>AI3 Protocol</span>
       </div>
     </Section>
   );
