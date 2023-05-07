@@ -10,9 +10,9 @@ const AddLinksHeader: React.FC<BgWhite> = ({bgWhite}) => {
 
   return (
     <Container bgWhite={bgWhite}>
-      <HeaderItem>
+      {/* <HeaderItem>
         <Label label={t('labels.label')} />
-      </HeaderItem>
+      </HeaderItem> */}
       <HeaderItem>
         <Label label={t('labels.link')} />
       </HeaderItem>
