@@ -16,7 +16,6 @@ export interface IUseWallet extends SignerValue {
    */
   isOnWrongNetwork: boolean;
   network: string;
-  account: string | null;
 }
 
 export const useWallet = (): IUseWallet => {
@@ -26,7 +25,6 @@ export const useWallet = (): IUseWallet => {
   const [ensName, setEnsName] = useState<string>('');
   const [ensAvatarUrl, setEnsAvatarUrl] = useState<string>('');
   const [isConnected, setIsConnected] = useState<boolean>(false);
-  const [account, setAccount] = useState<string | null>(null);
 
   // Update balance
   useEffect(() => {
@@ -40,16 +38,11 @@ export const useWallet = (): IUseWallet => {
   // Update ENS name and avatar
   useEffect(() => {
     if (provider && address) {
-      // provider?.lookupAddress(address).then((name: string | null) => {
-      //   name ? setEnsName(name) : setEnsName('');
-      // });
-      // provider?.getAvatar(address).then((avatarUrl: string | null) => {
-      //   avatarUrl ? setEnsAvatarUrl(avatarUrl) : setEnsAvatarUrl('');
-      // });
-      provider.listAccounts().then((accounts: string[]) => {
-        if (accounts.length > 0) {
-          setAccount(accounts[0]);
-        }
+      provider?.lookupAddress(address).then((name: string | null) => {
+        name ? setEnsName(name) : setEnsName('');
+      });
+      provider?.getAvatar(address).then((avatarUrl: string | null) => {
+        avatarUrl ? setEnsAvatarUrl(avatarUrl) : setEnsAvatarUrl('');
       });
     }
   }, [address, provider]);
@@ -75,6 +68,5 @@ export const useWallet = (): IUseWallet => {
     isOnWrongNetwork,
     methods,
     network,
-    account,
   };
 };
