@@ -1,4 +1,5 @@
 import axios from 'axios';
+import secrets from '../../../../secret.json';
 
 export const encodeStringToInt = (str: string): BigInt => {
   const encoder = new TextEncoder();
@@ -30,7 +31,7 @@ export const getCountryName = async (countryId) => {
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${countryId}.json`,
       {
         params: {
-          access_token: process.env.MAPBOX_API_KEY,
+          access_token: secrets.MAPBOX_API_KEY,
         },
       }
     );

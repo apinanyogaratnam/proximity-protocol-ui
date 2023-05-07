@@ -20,6 +20,7 @@ import {Dashboard} from 'utils/paths';
 import {useReactiveVar} from '@apollo/client';
 import {favoriteDaosVar} from 'context/apolloClient';
 import {useNetwork} from 'context/network';
+import secrets from '../../../../../secret.json';
 import {useNewWallet} from 'hooks/useNewWallet';
 import abi from '../../../../../abi/abi.json';
 import {decodeIntToString, getCountryName} from 'utils/idUnified';
@@ -66,7 +67,7 @@ export const DaoExplorer = () => {
 
   const getImage = async name => {
     const unsplashQuery = createApi({
-      accessKey: process.env.UNSPLASH_ACCESS_KEY,
+      accessKey: secrets.UNSPLASH_ACCESS_KEY,
     });
     const res = await unsplashQuery.search.getPhotos({
       query: name,
@@ -79,7 +80,7 @@ export const DaoExplorer = () => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}`,
+          Authorization: `Client-ID ${secrets.UNSPLASH_ACCESS_KEY}`,
         },
       }
     );
@@ -111,7 +112,7 @@ export const DaoExplorer = () => {
 
   const appendDaos = async () => {
     console.log('appending daos');
-    const nftId = await getUserNft(account, process.env.CONTRACT_ADDRESS);
+    const nftId = await getUserNft(account, secrets.CONTRACT_ADDRESS);
     console.log('nftId', nftId);
     // const str = decodeIntToString(nftId);
     const countryName = await getCountryName(`country.${nftId}`);

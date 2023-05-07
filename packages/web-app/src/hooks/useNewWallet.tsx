@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import Web3 from 'web3';
+import secrets from '../../../../secret.json';
 
 export const useNewWallet = () => {
   const [web3, setWeb3] = useState<Web3 | null>(null);
