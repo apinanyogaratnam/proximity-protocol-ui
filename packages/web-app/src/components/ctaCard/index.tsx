@@ -4,6 +4,7 @@ import {ButtonText} from '@aragon/ui-components';
 import useScreen from 'hooks/useScreen';
 import secrets from '../../../../../secret.json';
 import {useAuth0} from '@auth0/auth0-react';
+
 import './style.css';
 import abi from '../../../../../abi/abi.json';
 import globalAbi from '../../../../../abi/globalAbi.json';
@@ -33,46 +34,46 @@ const CTACard: React.FC<Props> = props => {
   const [selectedCountry, setSelectedCountry] = React.useState(null);
   const [selectedRegion, setSelectedRegion] = React.useState(null);
 
-  React.useEffect(() => {
-    const geocoder = new MapboxGeocoder({
-      accessToken: secrets.MAPBOX_API_KEY,
-      placeholder: 'Enter your location',
-      render: (item: any) => {
-        // override the default suggestion item rendering to preserve the comma separator
-        return `<div style="white-space: nowrap;">${item.place_name}</div>`;
-      },
-    });
+  // React.useEffect(() => {
+  //   const geocoder = new MapboxGeocoder({
+  //     accessToken: secrets.MAPBOX_API_KEY,
+  //     placeholder: 'Enter your location',
+  //     render: (item: any) => {
+  //       // override the default suggestion item rendering to preserve the comma separator
+  //       return `<div style="white-space: nowrap;">${item.place_name}</div>`;
+  //     },
+  //   });
 
-    geocoder.on('result', e => {
-      setSelectedLocation(e.result.place_name);
+  //   geocoder.on('result', e => {
+  //     setSelectedLocation(e.result.place_name);
 
-      console.log(e.result.context);
-      for (const feature of e.result.context) {
-        if (feature.id.startsWith('country.')) {
-          console.log(feature.id.replace('country.', ''));
-          setSelectedCountry(feature.id.replace('country.', ''));
-        } else if (feature.id.startsWith('region.')) {
-          console.log(feature.id.replace('region.', ''));
-          setSelectedRegion(feature.id.replace('region.', ''));
-        }
-      }
-    });
+  //     console.log(e.result.context);
+  //     for (const feature of e.result.context) {
+  //       if (feature.id.startsWith('country.')) {
+  //         console.log(feature.id.replace('country.', ''));
+  //         setSelectedCountry(feature.id.replace('country.', ''));
+  //       } else if (feature.id.startsWith('region.')) {
+  //         console.log(feature.id.replace('region.', ''));
+  //         setSelectedRegion(feature.id.replace('region.', ''));
+  //       }
+  //     }
+  //   });
 
-    const inputContainer = document.getElementById('geocoder-input-container');
-    if (inputContainer) inputContainer.appendChild(geocoder.onAdd());
+  //   const inputContainer = document.getElementById('geocoder-input-container');
+  //   if (inputContainer) inputContainer.appendChild(geocoder.onAdd());
 
-    // save the geocoder instance to the ref
-    geocoderRef.current = geocoder;
-  }, []);
+  //   // save the geocoder instance to the ref
+  //   geocoderRef.current = geocoder;
+  // }, []);
 
-  React.useEffect(() => {
-    if (geocoderRef.current) {
-      const inputElement = geocoderRef.current._inputEl;
-      if (inputElement) {
-        inputElement.style.width = '1000px';
-      }
-    }
-  }, [geocoderRef.current]);
+  // React.useEffect(() => {
+  //   if (geocoderRef.current) {
+  //     const inputElement = geocoderRef.current._inputEl;
+  //     if (inputElement) {
+  //       inputElement.style.width = '1000px';
+  //     }
+  //   }
+  // }, [geocoderRef.current]);
 
   const {isDesktop} = useScreen();
   const {loginWithRedirect, isAuthenticated, user, logout} = useAuth0();
@@ -104,25 +105,25 @@ const CTACard: React.FC<Props> = props => {
 
     // const globalContract = new web3.eth.Contract(globalAbi, secrets.GLOBAL_CONTRACT_ADDRESS);
 
-    const contract = new web3.eth.Contract(abi, contractAddress);
+    // const contract = new web3.eth.Contract(abi, contractAddress);
 
-    const id = parseInt(selectedCountry);
+    // const id = parseInt(selectedCountry);
 
-    const tx = await contract.methods.mint(account, id, 1, '0x').encodeABI();
-    const gasLimit = await web3.eth.estimateGas({
-      to: contractAddress,
-      data: tx,
-    });
+    // const tx = await contract.methods.mint(account, id, 1, '0x').encodeABI();
+    // const gasLimit = await web3.eth.estimateGas({
+    //   to: contractAddress,
+    //   data: tx,
+    // });
 
     const transaction = {
       to: contractAddress,
-      gas: gasLimit,
-      data: tx,
+      // gas: gasLimit,
+      // data: tx,
       from: account,
     };
 
-    const txReceipt = await web3.eth.sendTransaction(transaction);
-    console.log(`NFT minted! Transaction hash: ${txReceipt.transactionHash}`);
+    // const txReceipt = await web3.eth.sendTransaction(transaction);
+    // console.log(`NFT minted! Transaction hash: ${txReceipt.transactionHash}`);
     setMintedNft(true);
     setIsMinting(false);
   }
