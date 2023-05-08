@@ -7,7 +7,13 @@ import {UseSignerProvider} from 'context/signer';
 import 'tailwindcss/tailwind.css';
 import {IProviderOptions} from 'web3modal';
 import {loadConnectKit} from '@ledgerhq/connect-kit-loader';
-import {Context, ContextParams, Client} from '@aragon/sdk-client';
+import {
+  Context,
+  ContextParams,
+  Client,
+  ContextPlugin,
+} from '@aragon/sdk-client';
+
 import {ethers} from 'ethers';
 import {AlertProvider} from 'context/alert';
 import {client, goerliClient} from 'context/apolloClient';
@@ -37,6 +43,7 @@ const contextParams: ContextParams = {
   daoFactoryAddress: '0x16B6c6674fEf5d29C9a49EA68A19944f5a8471D3',
   // Choose your Web3 provider: Cloudfare, Infura, Alchemy, etc.
   web3Providers: ['https://rpc.ankr.com/eth_goerli'],
+  //todo add a real IPFS node
   ipfsNodes: [
     {
       url: 'https://testing-ipfs-0.aragon.network/api/v0',
@@ -52,6 +59,9 @@ const contextParams: ContextParams = {
 };
 
 const context: Context = new Context(contextParams);
+
+export const contextPlugin: ContextPlugin = ContextPlugin.fromContext(context);
+console.log('contextPlugin:', contextPlugin);
 
 export const aragonClient: Client = new Client(context);
 console.log('client', {aragonClient});

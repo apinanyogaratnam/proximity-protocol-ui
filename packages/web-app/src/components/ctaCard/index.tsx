@@ -1,19 +1,18 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
-import { ButtonText } from '@aragon/ui-components';
+import {ButtonText} from '@aragon/ui-components';
 import useScreen from 'hooks/useScreen';
-import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import secrets from '../../../../../secret.json';
-import { useAuth0 } from '@auth0/auth0-react';
+import {useAuth0} from '@auth0/auth0-react';
 import './style.css';
 import abi from '../../../../../abi/abi.json';
 import globalAbi from '../../../../../abi/globalAbi.json';
 import Web3 from 'web3';
-import { useWallet } from 'hooks/useWallet';
-import { Web3Provider } from '@ethersproject/providers';
-import { ethers } from 'ethers';
-import { useNewWallet } from 'hooks/useNewWallet';
-import { encodeStringToInt } from 'utils/idUnified';
+import {useWallet} from 'hooks/useWallet';
+import {Web3Provider} from '@ethersproject/providers';
+import {ethers} from 'ethers';
+import {useNewWallet} from 'hooks/useNewWallet';
+import {encodeStringToInt} from 'utils/idUnified';
 import ClipLoader from 'react-spinners/ClipLoader';
 
 type Props = {
@@ -33,8 +32,6 @@ const CTACard: React.FC<Props> = props => {
   const [selectedLocation, setSelectedLocation] = React.useState('');
   const [selectedCountry, setSelectedCountry] = React.useState(null);
   const [selectedRegion, setSelectedRegion] = React.useState(null);
-
-  const geocoderRef = React.useRef<MapboxGeocoder | null>(null);
 
   React.useEffect(() => {
     const geocoder = new MapboxGeocoder({
@@ -77,11 +74,11 @@ const CTACard: React.FC<Props> = props => {
     }
   }, [geocoderRef.current]);
 
-  const { isDesktop } = useScreen();
-  const { loginWithRedirect, isAuthenticated, user, logout } = useAuth0();
+  const {isDesktop} = useScreen();
+  const {loginWithRedirect, isAuthenticated, user, logout} = useAuth0();
   const [mintPageVisible, setMintPageVisible] = React.useState(false);
   const [isTOSChecked, setIsTOSChecked] = React.useState(false);
-  const { web3, account, balance, network, networkId, error } = useNewWallet();
+  const {web3, account, balance, network, networkId, error} = useNewWallet();
   const [isMinting, setIsMinting] = useState(false);
   const [mintedNft, setMintedNft] = useState(false);
   console.log('isAuthenticated', isAuthenticated);
@@ -160,7 +157,7 @@ const CTACard: React.FC<Props> = props => {
                 size="large"
                 label="Logout"
                 onClick={() =>
-                  logout({ logoutParams: { returnTo: window.location.origin } })
+                  logout({logoutParams: {returnTo: window.location.origin}})
                 }
               />
             ) : (
@@ -185,7 +182,7 @@ const CTACard: React.FC<Props> = props => {
                 I have read and accept the{' '}
                 <a
                   href=" https://docs.google.com/document/d/1KDtJ6zE9ATbsnModGbRiX_a6go9VJnuY/edit?usp=sharing&ouid=103669077276191563899&rtpof=true&sd=true"
-                  style={{ color: 'blue', textDecoration: 'underline' }}
+                  style={{color: 'blue', textDecoration: 'underline'}}
                 >
                   Aragon DAO Participation Agreement.
                 </a>
